@@ -15,4 +15,29 @@ class AURA_API AAuraCharacter : public AAuraCharacterBase
 	GENERATED_BODY()
 public:
 	AAuraCharacter();
+
+	/*
+		Spawn Character
+		↓
+		Spawn PlayerState
+		↓
+		Controller Possess Character
+		↓
+		调用 PossessedBy()  ← 服务器
+	*/
+	virtual void PossessedBy(AController* NewController) override;
+
+	/*
+		Spawn Character
+		↓
+		Character 已存在
+		↓
+		PlayerState 通过 Replication 过来
+		↓
+		OnRep_PlayerState() ← 客户端
+	*/
+	virtual void OnRep_PlayerState() override;
+
+private:
+	void InitAbilityActorInfo();
 };
