@@ -9,7 +9,7 @@
 
 AAuraEffectActor::AAuraEffectActor()
 {
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>("Mesh");
 	SetRootComponent(Mesh);
 	Sphere = CreateDefaultSubobject<USphereComponent>("Sphere");
@@ -24,8 +24,8 @@ void AAuraEffectActor::OnOverlap(UPrimitiveComponent* overlapComponent, AActor* 
 		// Const-Cast For Now
 		UAuraAttributeSet* nonConstAuraAttribeSet = const_cast<UAuraAttributeSet*>(AuraAttributeSet);
 		nonConstAuraAttribeSet->SetHealth(nonConstAuraAttribeSet->GetHealth() + 10.f);
-		Destroy();	
-	}		
+		Destroy();
+	}
 }
 
 void AAuraEffectActor::EndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
