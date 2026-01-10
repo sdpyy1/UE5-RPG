@@ -23,7 +23,7 @@ void AAuraEffectActor::OnOverlap(UPrimitiveComponent* overlapComponent, AActor* 
 
 		// Const-Cast For Now
 		UAuraAttributeSet* nonConstAuraAttribeSet = const_cast<UAuraAttributeSet*>(AuraAttributeSet);
-		nonConstAuraAttribeSet->SetHealth(nonConstAuraAttribeSet->GetHealth() + 10.f);
+		nonConstAuraAttribeSet->SetHealth(nonConstAuraAttribeSet->GetHealth() + 30.f);
 		Destroy();
 	}
 }

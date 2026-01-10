@@ -5,6 +5,8 @@
 #include <AbilitySystem/AuraAbilitySystemComponent.h>
 
 #include <Player/AuraPlayerState.h>
+#include <Player/AuraPlayerController.h>
+#include <UI/HUD/AuraHUD.h>
 AAuraCharacter::AAuraCharacter()
 {
 	GetCharacterMovement()->bOrientRotationToMovement = true;
@@ -18,7 +20,7 @@ AAuraCharacter::AAuraCharacter()
 
 	/////////////////////////////  GAS /////////////////////////////
 	// Aura的GAS放在了AuraPlayerState中
-}		
+}
 
 void AAuraCharacter::PossessedBy(AController* NewController)
 {
@@ -43,4 +45,10 @@ void AAuraCharacter::InitAbilityActorInfo()
 	playerState->GetAbilitySystemComponent()->InitAbilityActorInfo(playerState, this);
 	AbilitySystemComponent = playerState->GetAbilitySystemComponent();
 	AttributeSet = playerState->GetAttributeSet();
+
+	if (AAuraPlayerController* auraPlayerController = Cast<AAuraPlayerController>(GetController())) {
+		if (AAuraHUD* auraHUD = Cast<AAuraHUD>(auraPlayerController->GetHUD())) {
+			auraHUD->InitOverlay(auraPlayerController, playerState, AbilitySystemComponent, AttributeSet);
+		}
+	}
 }
