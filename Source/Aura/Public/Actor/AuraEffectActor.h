@@ -5,8 +5,12 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "AuraItemActor.h"
+#include "GameplayEffectTypes.h"
+
 #include "AuraEffectActor.generated.h"
+
 class UGameplayEffect;
+class UAbilitySystemComponent;
 
 UCLASS()
 class AURA_API AAuraEffectActor : public AAuraItemActor
@@ -25,6 +29,16 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGameplayEffect> GameplayEffectClass);
 
-	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category = "Effects")
+	UFUNCTION(BlueprintCallable)
+	void RemoveEffectFromTarget(AActor* TargetActor);
+
+	//////////////////////  Instance Effect  //////////////////////
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Effects")
 	TSubclassOf<UGameplayEffect> InstanceGameplayEffectClass;
+
+	//////////////////////  Infinite Effect  //////////////////////
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Effects")
+	TSubclassOf<UGameplayEffect> InfiniteGameplayEffectClass;
+
+	TMap<UAbilitySystemComponent*, FActiveGameplayEffectHandle> ActiveEffectMap;
 };

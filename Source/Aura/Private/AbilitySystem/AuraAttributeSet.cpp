@@ -20,6 +20,33 @@ void UAuraAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, MaxMana, COND_None, REPNOTIFY_Always);
 }
 
+void UAuraAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
+{
+	Super::PreAttributeChange(Attribute, NewValue);
+    if (Attribute == GetHealthAttribute())
+    {
+        NewValue = FMath::Clamp(NewValue, 0.f, GetMaxHealth());
+    }
+    if (Attribute == GetMaxHealthAttribute())
+    {
+        NewValue = FMath::Clamp(NewValue, 0.f, 1000);
+    }
+    if (Attribute == GetManaAttribute())
+    {
+        NewValue = FMath::Clamp(NewValue, 0.f, GetMaxMana());
+    }
+    if (Attribute == GetMaxManaAttribute())
+    {
+        NewValue = FMath::Clamp(NewValue, 0.f, 1000);
+    }
+}
+
+void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
+{
+    Super::PostGameplayEffectExecute(Data);
+
+}
+
 void UAuraAttributeSet::OnRep_Health(const FGameplayAttributeData oldHealth) const
 {
 	// 通知GAS，参数更新，用来回滚

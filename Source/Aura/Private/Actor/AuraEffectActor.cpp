@@ -28,5 +28,19 @@ void AAuraEffectActor::ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGam
 	FGameplayEffectContextHandle effectContextHandle = TargetASC->MakeEffectContext();
 	effectContextHandle.AddSourceObject(this);
 	FGameplayEffectSpecHandle effectSpecHandle = TargetASC->MakeOutgoingSpec(GameplayEffectClass, 1.f, effectContextHandle);
-	TargetASC->ApplyGameplayEffectSpecToSelf(*effectSpecHandle.Data.Get());
+	FActiveGameplayEffectHandle GameplayEffectHandle = TargetASC->ApplyGameplayEffectSpecToSelf(*effectSpecHandle.Data.Get());
+
+	const bool bIsInfinite = effectSpecHandle.Data.Get()->Def.Get()->DurationPolicy == EGameplayEffectDurationType::Infinite;
+	if (bIsInfinite) {
+		ActiveEffectMap.Add(TargetASC, GameplayEffectHandle);
+	}
+}
+
+void AAuraEffectActor::RemoveEffectFromTarget(AActor* TargetActor)
+{
+	UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
+	if (ActiveEffectMap.Contains(TargetASC)) {
+		TargetASC->RemoveActiveGameplayEffect(ActiveEffectMap[TargetASC]);
+	}
+	ActiveEffectMap.Remove(TargetASC);
 }
