@@ -25,6 +25,6 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGameplayEffect> GameplayEffectClass);
 
-	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category = "Effects")
+	UPROPERTY(EditAnywhere, Category = "Effects")
 	TSubclassOf<UGameplayEffect> InstanceGameplayEffectClass;
 };
