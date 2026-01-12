@@ -8,6 +8,7 @@
 #include <AbilitySystemInterface.h>
 #include "AbilitySystemBlueprintLibrary.h"
 #include <AbilitySystem/AuraAbilitySystemComponent.h>
+#include "GameplayTagsManager.h"
 AAuraEffectActor::AAuraEffectActor()
 {
 	PrimaryActorTick.bCanEverTick = true;

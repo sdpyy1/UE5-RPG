@@ -9,7 +9,7 @@
 
 class UAbilitySystemComponent;
 class UAttributeSet;
-
+class UGameplayEffect;
 /*
 	所有角色的基类（主角和敌人）
 */
@@ -25,6 +25,9 @@ public:
 
 protected:
 	virtual void InitAbilityActorInfo();
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attribute")
+	TSubclassOf<UGameplayEffect> DefaultPrimaryAttributes;
+	void InitPrimaryAttribute() const;
 protected:
 	virtual void BeginPlay() override;
 

@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Character/AuraCharacterBase.h"
+#include <AbilitySystem/AuraAbilitySystemComponent.h>
 
 AAuraCharacterBase::AAuraCharacterBase()
 {
@@ -14,6 +15,15 @@ AAuraCharacterBase::AAuraCharacterBase()
 UAbilitySystemComponent* AAuraCharacterBase::GetAbilitySystemComponent() const
 {
 	return AbilitySystemComponent;
+}
+
+void AAuraCharacterBase::InitPrimaryAttribute() const
+{
+	check(IsValid(GetAbilitySystemComponent()));
+	check(DefaultPrimaryAttributes);
+	FGameplayEffectSpecHandle handle = GetAbilitySystemComponent()->MakeOutgoingSpec(DefaultPrimaryAttributes,1.f, GetAbilitySystemComponent()->MakeEffectContext());
+
+	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*handle.Data.Get(), GetAbilitySystemComponent());
 }
 
 void AAuraCharacterBase::BeginPlay()

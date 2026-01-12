@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
-
+#include <Aura/Aura.h>
 void UAuraAbilitySystemComponent::AbilityCharacterInfoSet()
 {
 	// 绑定AbilitySystemComponent自带的委托
