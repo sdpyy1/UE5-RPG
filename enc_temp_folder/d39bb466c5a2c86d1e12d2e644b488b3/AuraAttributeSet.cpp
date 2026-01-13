@@ -9,8 +9,8 @@ UAuraAttributeSet::UAuraAttributeSet()
 		还可以在GameState中的ASC中用TableData进行的初始化，
 		或者直接创建一种用于初始化的GameplayEffect，	创建角色时，施加给角色即可
 	*/
-	//InitHealth(100.f);
-	//InitMana(50.f);
+	InitHealth(50.f);
+	InitMana(50.f);
 }
 
 void UAuraAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
