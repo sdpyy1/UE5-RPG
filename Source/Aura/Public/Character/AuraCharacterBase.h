@@ -12,6 +12,7 @@
 class UAbilitySystemComponent;
 class UAttributeSet;
 class UGameplayEffect;
+class UGameplayAbility;
 /*
 	所有角色的基类（主角和敌人）
 */
@@ -52,4 +53,12 @@ protected:
 
 	UPROPERTY()
 	TObjectPtr<UAttributeSet> AttributeSet;
+
+	void AddCharacterAbilities();
+private:
+	/*
+		一开始就需要赋予给角色的能力
+	*/
+	UPROPERTY(EditAnywhere, Category = "GAS|Abilities")
+	TArray<TSubclassOf<UGameplayAbility>> StarupAbilities;
 };

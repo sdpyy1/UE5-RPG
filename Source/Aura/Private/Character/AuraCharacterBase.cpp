@@ -40,5 +40,16 @@ void AAuraCharacterBase::InitializeDefaultAttributes() const
 	ApplyEffectOnSelf(DefaultVitalAttributes, 1.f);
 }
 
+void AAuraCharacterBase::AddCharacterAbilities()
+{
+	UAuraAbilitySystemComponent* ASC = CastChecked<UAuraAbilitySystemComponent>(AbilitySystemComponent);
+
+	// 服务器端返回True
+	if (!HasAuthority()) return;
+
+	// 赋予角色能力
+	ASC->AddCharacterAbilities(StarupAbilities);
+}
+
 void AAuraCharacterBase::InitAbilityActorInfo() {
 }
