@@ -4,11 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
-#include "UI/WidgetController/AuraOverlayWidgetController.h"
 #include "AuraHUD.generated.h"
 class UAuraUserWidget;
-class AuraOverlayWidgetController;
+class UAuraOverlayWidgetController;
 struct FWidgetControllerParams;
+class UAuraAttributeMenuController;
+class UAbilitySystemComponent;
+class UAttributeSet;
 /**
  *
  */
@@ -20,12 +22,12 @@ class AURA_API AAuraHUD : public AHUD
 public:
 	void InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UAttributeSet* AS);
 
-	UPROPERTY()
-	TObjectPtr<UAuraUserWidget> OverlayWidget;
-protected:
 	UAuraOverlayWidgetController* GetOverlayWidgetController(const FWidgetControllerParams& WCParams);
+	UAuraAttributeMenuController* GetAttributeMenuController(const FWidgetControllerParams& WCParams);
 
 private:
+	UPROPERTY()
+	TObjectPtr<UAuraUserWidget> OverlayWidget;
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UAuraUserWidget> OverlayWidgetClass;
 
@@ -34,4 +36,9 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UAuraOverlayWidgetController> OverlayWidgetControllerClass;
+
+	UPROPERTY()
+	TObjectPtr<UAuraAttributeMenuController> AttributeMenuController;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UAuraAttributeMenuController>  AttributeMenuControllerClass;
 };

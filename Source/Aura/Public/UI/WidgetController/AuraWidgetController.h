@@ -31,7 +31,7 @@ struct FWidgetControllerParams
 	TObjectPtr<UAttributeSet> AttributeSet = nullptr;
 };
 /**
- *
+ *  WidgetController is the Inter Between Widget And AbilitySystem
  */
 UCLASS()
 class AURA_API UAuraWidgetController : public UObject
@@ -42,12 +42,13 @@ public:
 	void SetWidgetControllerParams(const FWidgetControllerParams& WCParams);
 
 	/*
-		子类实现，通过委托广播初始值
+		Define How To Init Widget Data
 	*/
+	UFUNCTION(BlueprintCallable)
 	virtual void BroadcastInitialValues();
 
 	/*
-		子类实现，绑定Attribute修改委托触发时的回调函数
+		Define How To Link AbilitySystem Data To Widget Data
 	*/
 	virtual void BindCallbacksToDependencies();
 protected:
