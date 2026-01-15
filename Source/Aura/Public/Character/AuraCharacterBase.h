@@ -34,6 +34,7 @@ protected:
 	TSubclassOf<UGameplayEffect> DefaultSecondaryAttributes;
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attribute")
 	TSubclassOf<UGameplayEffect> DefaultVitalAttributes;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -46,6 +47,10 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
+
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	FName WeaponTipSocketName;
+	virtual FVector GetCombatSocketLoaction() override;
 
 	/////////////////////////////  GAS /////////////////////////////
 	UPROPERTY()
