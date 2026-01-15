@@ -24,6 +24,13 @@ public:
 
 	void AddCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>>& Abilities);
 
+	/*
+		ASC负责查看这个Tag对应的Ability，并操作这个Ability
+	*/
+	void AbilityInputTagHeld(const FGameplayTag& Tag);
+	void AbilityInputTagRelease(const FGameplayTag& Tag);
 protected:
-	void EffectApplied(UAbilitySystemComponent* ASC, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveEffectHandle);
+
+	UFUNCTION(Client, Reliable)
+	void ClientEffectApplied(UAbilitySystemComponent* ASC, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveEffectHandle);
 };
