@@ -3,18 +3,21 @@
 #include "Character/AuraEnemy.h"
 #include <AbilitySystem/AuraAbilitySystemComponent.h>
 #include <AbilitySystem/AuraAttributeSet.h>
-
+#include "Components/WidgetComponent.h"
+#include "UI/Widget/AuraUserWidget.h"
 AAuraEnemy::AAuraEnemy()
 {
 	//Cursor Trace In Visibility Channel For Enemy HighLight In PlayerController
 	GetMesh()->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
-
 	/////////////////////////////  GAS /////////////////////////////
 	AbilitySystemComponent = CreateDefaultSubobject<UAuraAbilitySystemComponent>("AbilitySystemComponent");
 	AbilitySystemComponent->SetIsReplicated(true);
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
 
 	AttributeSet = CreateDefaultSubobject<UAuraAttributeSet>("AttributeSet");
+
+	HealthBar = CreateDefaultSubobject<UWidgetComponent>("HealthBar");
+	HealthBar->SetupAttachment(GetRootComponent());
 }
 
 void AAuraEnemy::HighlightActor()
@@ -40,6 +43,25 @@ void AAuraEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 	InitAbilityActorInfo();
+
+	// 这样蓝图就能获得Controller了（就是这个Character本身）
+	if (UAuraUserWidget* AuraUserWidget = Cast<UAuraUserWidget>(HealthBar->GetUserWidgetObject())) {
+		AuraUserWidget->SetWidgetController(this);
+	}
+
+	// Bind Callback To ACS
+	if (UAuraAttributeSet* AuraASC = CastChecked<UAuraAttributeSet>(AttributeSet)) {
+		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraASC->GetHealthAttribute()).AddLambda([this](const FOnAttributeChangeData& Data) {
+			OnHealthChangedDelegate.Broadcast(Data.NewValue);
+			});
+		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraASC->GetMaxHealthAttribute()).AddLambda([this](const FOnAttributeChangeData& Data) {
+			OnMaxHealthChangedDelegate.Broadcast(Data.NewValue);
+			});
+
+
+		OnHealthChangedDelegate.Broadcast(AuraASC->GetHealth());
+        OnMaxHealthChangedDelegate.Broadcast(AuraASC->GetMaxHealth());
+	}
 }
 
 void AAuraEnemy::InitAbilityActorInfo()
@@ -48,4 +70,6 @@ void AAuraEnemy::InitAbilityActorInfo()
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 
 	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->AbilityCharacterInfoSet();
+
+	InitializeDefaultAttributes();
 }

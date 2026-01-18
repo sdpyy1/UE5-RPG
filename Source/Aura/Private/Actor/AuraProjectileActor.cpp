@@ -2,16 +2,21 @@
 
 #include "Actor/AuraProjectileActor.h"
 #include "Components/SphereComponent.h"
+#include "Components/AudioComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "NiagaraFunctionLibrary.h"
-#include "Components/AudioComponent.h"
+#include "AbilitySystemComponent.h"
+#include "Aura/Aura.h"
+#include <AbilitySystemBlueprintLibrary.h>
+
 AAuraProjectileActor::AAuraProjectileActor()
 {
 	PrimaryActorTick.bCanEverTick = false;
 	bReplicates = true;
 	Sphere = CreateDefaultSubobject<USphereComponent>("Sphere");
 	SetRootComponent(Sphere);
+	Sphere->SetCollisionObjectType(ECC_Projectile);
 	Sphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	Sphere->SetCollisionResponseToAllChannels(ECR_Ignore);
 	Sphere->SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Overlap);
@@ -30,6 +35,9 @@ void AAuraProjectileActor::OnSphereOverlap(UPrimitiveComponent* OverlappedCompon
 	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
 	loopSoundComponent->Stop();
 	if (HasAuthority()) {
+		if (UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor)) {
+			ASC->ApplyGameplayEffectSpecToSelf(*DamageEffectSpecHandle.Data.Get());
+		}
 		Destroy();
 	}
 	else {

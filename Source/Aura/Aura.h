@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+// 自定义的碰撞通道
+#define ECC_Projectile ECollisionChannel::ECC_GameTraceChannel1
 
 #define PRINT_TO_SCREEN(Str) \
 do \
