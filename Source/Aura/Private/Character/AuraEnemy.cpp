@@ -4,6 +4,7 @@
 #include <AbilitySystem/AuraAbilitySystemComponent.h>
 #include <AbilitySystem/AuraAttributeSet.h>
 #include "Components/WidgetComponent.h"
+#include "AbilitySystem/AuraAbilitySystemLibary.h"
 #include "UI/Widget/AuraUserWidget.h"
 AAuraEnemy::AAuraEnemy()
 {
@@ -58,10 +59,14 @@ void AAuraEnemy::BeginPlay()
 			OnMaxHealthChangedDelegate.Broadcast(Data.NewValue);
 			});
 
-
 		OnHealthChangedDelegate.Broadcast(AuraASC->GetHealth());
-        OnMaxHealthChangedDelegate.Broadcast(AuraASC->GetMaxHealth());
+		OnMaxHealthChangedDelegate.Broadcast(AuraASC->GetMaxHealth());
 	}
+}
+
+void AAuraEnemy::InitializeDefaultAttributes() const
+{
+	UAuraAbilitySystemLibary::InitDefaultAttributes(this, CharacterClass, Level, AbilitySystemComponent);
 }
 
 void AAuraEnemy::InitAbilityActorInfo()
