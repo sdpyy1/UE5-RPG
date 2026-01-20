@@ -10,6 +10,8 @@
 #include "AuraGameplayTags.h"
 #include "NAvigationSystem.h"
 #include "NavigationPath.h"
+#include "GameFramework/Character.h"
+#include "UI/Widget/DamageTextWidgetComponent.h"
 
 AAuraPlayerController::AAuraPlayerController()
 {
@@ -67,6 +69,17 @@ void AAuraPlayerController::SetupInputComponent()
 
 	// Input转为对应的GameplayTag
 	EnhancedInputComponent->BindAbilityActions(InputConfig, this, &ThisClass::AbilityInputTagPress, &ThisClass::AbilityInputTagRelease, &ThisClass::AbilityInputTagHeld);
+}
+
+void AAuraPlayerController::ShowDamageNumber_Implementation(float Damage, ACharacter* Target)
+{
+	if (IsValid(Target) && DamageTextClass) {
+		UDamageTextWidgetComponent * DamgeTextComponentInstance = NewObject<UDamageTextWidgetComponent>(Target, DamageTextClass);
+		DamgeTextComponentInstance->RegisterComponent();
+		DamgeTextComponentInstance->AttachToComponent(Target->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
+		DamgeTextComponentInstance->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+        DamgeTextComponentInstance->SetDamagetText(Damage);
+	}
 }
 
 void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)

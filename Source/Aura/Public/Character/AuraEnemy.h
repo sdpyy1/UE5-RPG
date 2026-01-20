@@ -10,6 +10,8 @@
 #include "AuraEnemy.generated.h"
 
 class UWidgetComponent;
+class UBehaviorTree;
+class AAuraAIController;
 /**
  *
  */
@@ -19,6 +21,8 @@ class AURA_API AAuraEnemy : public AAuraCharacterBase, public IEnemyInterface
 	GENERATED_BODY()
 public:
 	AAuraEnemy();
+	virtual void PossessedBy(AController* NewController) override;
+	virtual void Die() override;
 
 	/*
 		HigtLight Interface
@@ -30,7 +34,14 @@ public:
 		Combat Interface
 	*/
 	virtual int GetPlayerLevel() override;
+	void HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
 
+	UPROPERTY(BlueprintReadOnly, Category = "Combat")
+	bool bHitReacting = false;
+	UPROPERTY(BlueprintReadOnly, Category = "Combat")
+	float BaseWalkSpeed = 250;
+	UPROPERTY(BlueprintReadOnly, Category = "Combat")
+	float lifeSpen = 5;
 protected:
 	virtual void BeginPlay() override;
 	virtual void InitializeDefaultAttributes() const override;
@@ -51,4 +62,10 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character Class Default", meta = (AllowPrivateAccess = true))
 	ECharacterClass CharacterClass = ECharacterClass::Warrior;
+
+	UPROPERTY(EditAnywhere, Category = "AI")
+	TObjectPtr<UBehaviorTree> BehaviorTree;
+
+	UPROPERTY()
+	TObjectPtr<AAuraAIController> AuraAIController;
 };

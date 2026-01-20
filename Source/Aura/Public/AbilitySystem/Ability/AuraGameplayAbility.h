@@ -20,11 +20,12 @@ public:
 	*/
 	//virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 
-
-
 	/*
 		每种能力都需要手动设置启动标签，表示什么Input来激活能力
 	*/
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	FGameplayTag StartupTag;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage")
+	FScalableFloat Damage;
 };

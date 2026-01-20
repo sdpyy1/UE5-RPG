@@ -13,6 +13,9 @@ class UAbilitySystemComponent;
 class UAttributeSet;
 class UGameplayEffect;
 class UGameplayAbility;
+class UAnimMontage;
+class UMaterialInstance;
+class UMaterialInstanceDynamic;
 /*
 	所有角色的基类（主角和敌人）
 */
@@ -25,7 +28,11 @@ public:
 	AAuraCharacterBase();
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
+	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
+	virtual void Die() override;
 
+	UFUNCTION(netmulticast, Reliable)
+	virtual void MulticastHandleDeath();
 protected:
 	virtual void InitAbilityActorInfo();
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attribute")
@@ -60,10 +67,26 @@ protected:
 	TObjectPtr<UAttributeSet> AttributeSet;
 
 	void AddCharacterAbilities();
-private:
 	/*
-		一开始就需要赋予给角色的能力
-	*/
+	一开始就需要赋予给角色的能力
+*/
 	UPROPERTY(EditAnywhere, Category = "GAS|Abilities")
 	TArray<TSubclassOf<UGameplayAbility>> StarupAbilities;
+
+	/*
+		角色死亡时使用的消融材质
+	*/
+	void Dissolve();
+	UFUNCTION(BlueprintImplementableEvent)
+	void StartDissolveTimeline(UMaterialInstanceDynamic* DynamicMaterialInstance);
+	UFUNCTION(BlueprintImplementableEvent)
+	void StartWeaponDissolveTimeline(UMaterialInstanceDynamic* DynamicMaterialInstance);
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Material")
+	TObjectPtr<UMaterialInstance> DissolveMaterialInstance;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Material")
+	TObjectPtr<UMaterialInstance> WeaponDissolveMaterialInstance;
+private:
+
+	UPROPERTY(EditAnywhere, Category = "GAS|Montage")
+	TObjectPtr<UAnimMontage> HitReactMontage;
 };

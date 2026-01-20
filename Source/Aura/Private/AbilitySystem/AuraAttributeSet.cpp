@@ -4,6 +4,10 @@
 #include <Net/UnrealNetwork.h>
 #include "GameplayEffectExtension.h"
 #include "AuraGameplayTags.h"
+#include <Interaction/CombatInterface.h>
+#include "kismet/GameplayStatics.h"
+#include <Player/AuraPlayerController.h>
+#include <GameFramework/Character.h>
 UAuraAttributeSet::UAuraAttributeSet()
 {
 	/*
@@ -88,11 +92,39 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
 	{
 		SetHealth(FMath::Clamp(GetHealth(), 0.f, GetMaxHealth()));
-        UE_LOG(LogTemp, Warning, TEXT("Change Health On: %f"), GetHealth());
+		if (GetHealth() <= 0.f) {
+			if (ICombatInterface* CombatInterface = Cast<ICombatInterface>(Data.Target.GetAvatarActor())) {
+				CombatInterface->Die();
+			}
+		}
 	}
 	if (Data.EvaluatedData.Attribute == GetManaAttribute())
 	{
 		SetMana(FMath::Clamp(GetMana(), 0.f, GetMaxHealth()));
+	}
+	if (Data.EvaluatedData.Attribute == GetIncomingDamageAttribute())
+	{
+		float IncomingDamageCache = GetIncomingDamage();
+		SetIncomingDamage(0.f);
+		if (IncomingDamageCache > 0.f) {
+			const float NewHealth = GetHealth() - IncomingDamageCache;
+			SetHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth()));
+			const bool bFatal = NewHealth <= 0.f;  // Death
+			if (bFatal) {// 致死伤害
+				if (ICombatInterface* CombatInterface = Cast<ICombatInterface>(Data.Target.GetAvatarActor())) {
+					CombatInterface->Die();
+				}
+			}
+			else {// 非致死伤害，激活HitReact能力（会播放受击动画）
+				FGameplayTagContainer TagContainer;
+				TagContainer.AddTag(FAuraGameplayTags::Get().Effects_HitReact);
+				Data.Target.TryActivateAbilitiesByTag(TagContainer);
+			}
+		}
+
+		if (AAuraPlayerController* AuraPlayerController = Cast<AAuraPlayerController>(UGameplayStatics::GetPlayerController(Data.Target.GetAvatarActor(), 0))) {
+			AuraPlayerController->ShowDamageNumber(IncomingDamageCache, CastChecked<ACharacter>(Data.Target.GetAvatarActor()));
+		}
 	}
 }
 

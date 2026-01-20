@@ -51,6 +51,13 @@ public:
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, Mana);
 
 	/*
+		Meta Attr
+	*/
+	UPROPERTY(BlueprintReadOnly, Category = "Meta Attr")
+	FGameplayAttributeData IncomingDamage;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, IncomingDamage);
+
+	/*
 		Primary Attr
 	*/
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Strength, Category = "Primary Attr")
