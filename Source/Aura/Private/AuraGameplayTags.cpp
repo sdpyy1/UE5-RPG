@@ -124,7 +124,8 @@ void FAuraGameplayTags::InitNativeGameplayTags()
 		FName("Effects.HitReact"),
 		FString("Enemy Use Hit React")
 	);
-
-	
-
+	GameplayTags.Ability_Attack = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Ability.Attack"),
+		FString("Ability Attack")
+	);
 }

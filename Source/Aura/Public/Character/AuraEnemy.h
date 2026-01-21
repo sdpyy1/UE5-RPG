@@ -12,6 +12,7 @@
 class UWidgetComponent;
 class UBehaviorTree;
 class AAuraAIController;
+class AActor;
 /**
  *
  */
@@ -23,6 +24,9 @@ public:
 	AAuraEnemy();
 	virtual void PossessedBy(AController* NewController) override;
 	virtual void Die() override;
+
+	virtual void SetCombatTarget_Implementation(AActor* InCombatTarget) override;
+	virtual AActor* GetCombatTarget_Implementation() override;
 
 	/*
 		HigtLight Interface
@@ -42,6 +46,10 @@ public:
 	float BaseWalkSpeed = 250;
 	UPROPERTY(BlueprintReadOnly, Category = "Combat")
 	float lifeSpen = 5;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+	TObjectPtr<AActor> CombatTarget;
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void InitializeDefaultAttributes() const override;

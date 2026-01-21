@@ -29,6 +29,7 @@ public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
+	virtual UAnimMontage* GetAttackMontage_Implementation() override;
 	virtual void Die() override;
 
 	UFUNCTION(netmulticast, Reliable)
@@ -68,8 +69,8 @@ protected:
 
 	void AddCharacterAbilities();
 	/*
-	一开始就需要赋予给角色的能力
-*/
+		一开始就需要赋予给角色的能力
+	*/
 	UPROPERTY(EditAnywhere, Category = "GAS|Abilities")
 	TArray<TSubclassOf<UGameplayAbility>> StarupAbilities;
 
@@ -89,4 +90,7 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "GAS|Montage")
 	TObjectPtr<UAnimMontage> HitReactMontage;
+
+	UPROPERTY(EditAnywhere, Category = "GAS|Montage")
+	TObjectPtr<UAnimMontage> AttackMontage;
 };

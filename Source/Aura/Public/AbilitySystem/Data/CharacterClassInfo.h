@@ -6,6 +6,11 @@
 #include "Engine/DataAsset.h"
 #include "CharacterClassInfo.generated.h"
 class UGameplayEffect;
+
+/*
+	此文件用于定义各个职业需要的默认信息，如默认施加的GameEffect
+*/
+
 /*
 	职业枚举
 */
@@ -49,5 +54,6 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Common Class Default")
 	TSubclassOf<UGameplayEffect> VitalAttributes;
 
+public:
 	FCharacterClassDefaultInfo GetClassDefaultInfo(ECharacterClass CharacterClass);
 };
