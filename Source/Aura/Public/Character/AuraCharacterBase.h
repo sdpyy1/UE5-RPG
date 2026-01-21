@@ -60,7 +60,7 @@ protected:
 	virtual FVector GetCombatSocketLoaction() override;
 
 	/////////////////////////////  GAS /////////////////////////////
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 
 	UPROPERTY()
