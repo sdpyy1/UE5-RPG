@@ -14,7 +14,7 @@ AAuraCharacterBase::AAuraCharacterBase()
 	Weapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	GetMesh()->SetCollisionResponseToChannel(ECC_Projectile, ECR_Overlap);
-	GetMesh()->SetGenerateOverlapEvents(true);  // ¼ÓÕâ¸ö²ÅÄÜ´¥·¢OnOverlapBegin
+	GetMesh()->SetGenerateOverlapEvents(true);  // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü´ï¿½ï¿½ï¿½OnOverlapBegin
 	GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 }
@@ -37,6 +37,12 @@ void AAuraCharacterBase::Die()
 {
 	Weapon->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld, true));
 	MulticastHandleDeath();
+}
+
+FVector AAuraCharacterBase::GetCombatSocketLocation_Implementation()
+{
+	check(Weapon);
+	return Weapon->GetSocketLocation(WeaponTipSocketName);
 }
 
 void AAuraCharacterBase::MulticastHandleDeath_Implementation()
@@ -78,19 +84,15 @@ void AAuraCharacterBase::InitializeDefaultAttributes() const
 	ApplyEffectOnSelf(DefaultVitalAttributes, 1.f);
 }
 
-FVector AAuraCharacterBase::GetCombatSocketLoaction()
-{
-	return Weapon->GetSocketLocation(WeaponTipSocketName);
-}
 
 void AAuraCharacterBase::AddCharacterAbilities()
 {
 	UAuraAbilitySystemComponent* ASC = CastChecked<UAuraAbilitySystemComponent>(AbilitySystemComponent);
 
-	// ·þÎñÆ÷¶Ë·µ»ØTrue
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë·ï¿½ï¿½ï¿½True
 	if (!HasAuthority()) return;
 
-	// ¸³Óè½ÇÉ«ÄÜÁ¦
+	// ï¿½ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½
 	ASC->AddCharacterAbilities(StarupAbilities);
 }
 

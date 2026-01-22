@@ -20,7 +20,7 @@ void UAuraProjectileSpellAbility::SpawnProjectile(const FVector& TargetLocaltion
 	ICombatInterface* CombatAPI = Cast<ICombatInterface>(GetAvatarActorFromActorInfo());
 	if (CombatAPI) {
 		// 生成这个投掷物Actor
-		const FVector SocketLocation = CombatAPI->GetCombatSocketLoaction();
+		const FVector SocketLocation = CombatAPI->Execute_GetCombatSocketLocation(GetAvatarActorFromActorInfo());
 		FRotator SocketRotation = (TargetLocaltion - SocketLocation).Rotation();
 		SocketRotation.Pitch = 0.f;
 		FTransform SpawnTransform;

@@ -31,7 +31,7 @@ public:
 	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
 	virtual UAnimMontage* GetAttackMontage_Implementation() override;
 	virtual void Die() override;
-
+	virtual FVector GetCombatSocketLocation_Implementation() override;
 	UFUNCTION(netmulticast, Reliable)
 	virtual void MulticastHandleDeath();
 protected:
@@ -58,7 +58,6 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	FName WeaponTipSocketName;
-	virtual FVector GetCombatSocketLoaction() override;
 
 	/////////////////////////////  GAS /////////////////////////////
 	UPROPERTY(BlueprintReadOnly)

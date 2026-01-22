@@ -22,7 +22,7 @@ AAuraEnemy::AAuraEnemy()
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
 
 	AttributeSet = CreateDefaultSubobject<UAuraAttributeSet>("AttributeSet");
-	/* ÈÃ×ªÏò¸ü¼Ó×ÔÈ»£¬Ä¬ÈÏµÄController×ªÏòºÜÉúÓ²£¬Movement×é¼şÊµÏÖÁË¸üºÃµÄ×ªÏò*/
+	/* ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È»ï¿½ï¿½Ä¬ï¿½Ïµï¿½Controller×ªï¿½ï¿½ï¿½ï¿½ï¿½Ó²ï¿½ï¿½Movementï¿½ï¿½ï¿½Êµï¿½ï¿½ï¿½Ë¸ï¿½ï¿½Ãµï¿½×ªï¿½ï¿½*/
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
@@ -87,7 +87,7 @@ void AAuraEnemy::BeginPlay()
 	GetCharacterMovement()->MaxWalkSpeed = BaseWalkSpeed;
 	InitAbilityActorInfo();
 
-	// ÕâÑùÀ¶Í¼¾ÍÄÜ»ñµÃControllerÁË£¨¾ÍÊÇÕâ¸öCharacter±¾Éí£©
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ï¿½Ü»ï¿½ï¿½Controllerï¿½Ë£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Characterï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	if (UAuraUserWidget* AuraUserWidget = Cast<UAuraUserWidget>(HealthBar->GetUserWidgetObject())) {
 		AuraUserWidget->SetWidgetController(this);
 	}
@@ -123,7 +123,7 @@ void AAuraEnemy::InitializeDefaultAttributes() const
 
 void AAuraEnemy::InitAbilityActorInfo()
 {
-	// 1. ×é¼şµÄÓµÓĞÕßÊÇË­ 2. ¼¼ÄÜ×÷ÓÃÓÚË­£¨±ÈÈçÊÇË­·¢Éä¼¼ÄÜ£©
+	// 1. ï¿½ï¿½ï¿½ï¿½ï¿½Óµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë­ 2. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë­ï¿½ï¿½ï¿½ä¼¼ï¿½Ü£ï¿½
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 
 	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->AbilityCharacterInfoSet();
