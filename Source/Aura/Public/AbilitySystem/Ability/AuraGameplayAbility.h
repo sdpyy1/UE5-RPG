@@ -16,7 +16,7 @@ class AURA_API UAuraGameplayAbility : public UGameplayAbility
 	GENERATED_BODY()
 public:
 	/*
-		激活能力的接口
+		激活能力的接口，这个一般在最终的蓝图类中来重写，所以CPP的Ability类主要用于辅助成员、函数的创建
 	*/
 	//virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 
@@ -25,7 +25,4 @@ public:
 	*/
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	FGameplayTag StartupTag;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage")
-	FScalableFloat Damage;
 };

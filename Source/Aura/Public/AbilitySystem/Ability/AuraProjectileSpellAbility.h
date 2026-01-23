@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "DamageGameplayAbility.h"
 #include "AbilitySystem/Ability/AuraGameplayAbility.h"
 #include "AuraProjectileSpellAbility.generated.h"
 class AAuraProjectileActor;
@@ -10,18 +11,16 @@ class AAuraProjectileActor;
  *	投掷物的能力基类
  */
 UCLASS()
-class AURA_API UAuraProjectileSpellAbility : public UAuraGameplayAbility
+class AURA_API UAuraProjectileSpellAbility : public UDamageGameplayAbility
 {
 	GENERATED_BODY()
 protected:
-
-	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
-
+	
 	/*
 		在指定位置生成投掷物
 	*/
 	UFUNCTION(BlueprintCallable, Category = "Projectile")
-	void SpawnProjectile(const FVector& TargetLocaltion);
+	void SpawnProjectile(const FVector& TargetLocation);
 
 
 	/*
@@ -29,11 +28,4 @@ protected:
 	*/
 	UPROPERTY(EditAnyWhere, BlueprintReadOnly)
 	TSubclassOf<AAuraProjectileActor> ProjectileActorClass;
-
-
-	/*
-		GameplayEffect类型，用于计算伤害
-	*/
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TSubclassOf<UGameplayEffect> DamageEffectClass;
 };

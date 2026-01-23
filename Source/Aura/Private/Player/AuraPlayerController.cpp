@@ -10,7 +10,10 @@
 #include "AuraGameplayTags.h"
 #include "NAvigationSystem.h"
 #include "NavigationPath.h"
+#include "NiagaraFunctionLibrary.h"
 #include "GameFramework/Character.h"
+#include "kismet/GameplayStatics.h"
+#include "Particles/ParticleSystem.h"
 #include "UI/Widget/DamageTextWidgetComponent.h"
 
 AAuraPlayerController::AAuraPlayerController()
@@ -148,6 +151,7 @@ void AAuraPlayerController::AbilityInputTagRelease(FGameplayTag GameplayTag)
 	else {
 		if (APawn* ControlPawn = GetPawn()) {
 			if (FollowTime <= ShortPressThreshold) {
+				
 				// 通过导航系统获得起点终点之间一系列点，然后把他们加入到SplineComponent
 				if (UNavigationPath* NavPath = UNavigationSystemV1::FindPathToLocationSynchronously(this, ControlPawn->GetActorLocation(), CachedDestination)) {
 					Spline->ClearSplinePoints();
@@ -158,6 +162,8 @@ void AAuraPlayerController::AbilityInputTagRelease(FGameplayTag GameplayTag)
 					if (NavPath->PathPoints.Num() > 0) {
 						CachedDestination = NavPath->PathPoints[NavPath->PathPoints.Num() - 1];
 						bAutoRunning = true;
+						// 生成点击的例子效果
+						UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ClickMoveNiagara, CachedDestination);
 					}
 				}
 			}

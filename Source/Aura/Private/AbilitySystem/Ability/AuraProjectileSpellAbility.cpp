@@ -7,12 +7,7 @@
 #include "AbilitySystemComponent.h"
 #include "AuraGameplayTags.h"
 
-void UAuraProjectileSpellAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
-{
-	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-}
-
-void UAuraProjectileSpellAbility::SpawnProjectile(const FVector& TargetLocaltion)
+void UAuraProjectileSpellAbility::SpawnProjectile(const FVector& TargetLocation)
 {
 	const bool isSever = GetAvatarActorFromActorInfo()->HasAuthority();
 	if (!isSever) return;
@@ -21,7 +16,7 @@ void UAuraProjectileSpellAbility::SpawnProjectile(const FVector& TargetLocaltion
 	if (CombatAPI) {
 		// 生成这个投掷物Actor
 		const FVector SocketLocation = CombatAPI->Execute_GetCombatSocketLocation(GetAvatarActorFromActorInfo());
-		FRotator SocketRotation = (TargetLocaltion - SocketLocation).Rotation();
+		FRotator SocketRotation = (TargetLocation - SocketLocation).Rotation();
 		SocketRotation.Pitch = 0.f;
 		FTransform SpawnTransform;
 		SpawnTransform.SetLocation(SocketLocation);
@@ -31,7 +26,7 @@ void UAuraProjectileSpellAbility::SpawnProjectile(const FVector& TargetLocaltion
 		FGameplayEffectSpecHandle SpecHandle = ASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), ASC->MakeEffectContext());
 
 		FAuraGameplayTags Tags = FAuraGameplayTags::Get();
-		const float DamageEval = Damage.GetValueAtLevel(GetAbilityLevel());
+		const float DamageEval = DamageComputer.GetValueAtLevel(GetAbilityLevel());
 		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, Tags.Damage, DamageEval);
 		SpawnActor->DamageEffectSpecHandle = SpecHandle;
 		SpawnActor->FinishSpawning(SpawnTransform);

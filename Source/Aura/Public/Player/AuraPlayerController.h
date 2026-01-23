@@ -7,6 +7,7 @@
 #include "GameplayTagContainer.h"
 #include "AuraPlayerController.generated.h"
 
+class UNiagaraSystem;
 class UInputMappingContext;
 class UInputAction;
 class IEnemyInterface;
@@ -66,6 +67,9 @@ private:
 	/*
 		点击移动相关
 	*/
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UNiagaraSystem> ClickMoveNiagara;
+
 	FVector CachedDestination = FVector::ZeroVector;
 	float FollowTime = 0.f;
 	float ShortPressThreshold = 0.5f;
