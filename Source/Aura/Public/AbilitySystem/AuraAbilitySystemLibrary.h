@@ -6,15 +6,15 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "Data/CharacterClassInfo.h"
 
-#include "AuraAbilitySystemLibary.generated.h"
+#include "AuraAbilitySystemLibrary.generated.h"
 class UAuraOverlayWidgetController;
 class UAuraAttributeMenuController;
 class UAbilitySystemComponent;
 /**
- *
+ *	一些全局可用的静态函数
  */
 UCLASS()
-class AURA_API UAuraAbilitySystemLibary : public UBlueprintFunctionLibrary
+class AURA_API UAuraAbilitySystemLibrary : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
 public:
@@ -27,4 +27,11 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibary|CharacterClassDefaults")
 	static void InitDefaultAttributes(const UObject* UWorldContextObject, ECharacterClass CharacterClass, float Level, UAbilitySystemComponent* ASC);
+
+	/*
+	 *	查询一个球形范围内的活的角色
+	 */
+	
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibary|GameplayMechanics")
+	static void GetLivePlayerWithinRadius(const UObject* WorldContextObject, TArray<AActor*>& OutOverlappingActors, const TArray<AActor*>& ActorsToIgnore, const FVector& SphereLocation, float Radius);
 };

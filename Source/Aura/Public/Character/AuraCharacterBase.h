@@ -32,6 +32,9 @@ public:
 	virtual UAnimMontage* GetAttackMontage_Implementation() override;
 	virtual void Die() override;
 	virtual FVector GetCombatSocketLocation_Implementation() override;
+	virtual bool isDead_Implementation() const override;
+	virtual AActor * GetAvatar_Implementation() override;
+	
 	UFUNCTION(netmulticast, Reliable)
 	virtual void MulticastHandleDeath();
 protected:
@@ -44,6 +47,7 @@ protected:
 	TSubclassOf<UGameplayEffect> DefaultVitalAttributes;
 
 protected:
+	bool bDead = false;
 	virtual void BeginPlay() override;
 
 	/*
