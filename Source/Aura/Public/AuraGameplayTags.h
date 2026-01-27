@@ -7,7 +7,7 @@
 /*
 	Global GameplayTags Manager
 */
-struct FAuraGameplayTags
+	struct FAuraGameplayTags
 {
 public:
 	static const FAuraGameplayTags& Get() { return GameplayTags; };
@@ -43,6 +43,12 @@ public:
 	FGameplayTag Effects_HitReact;
 
 	FGameplayTag Ability_Attack;
+
+	/* 用于区分Montage攻击时使用的时武器还是空手*/
+	FGameplayTag Montage_Attack_Weapon;
+	FGameplayTag Montage_Attack_LeftHand;
+	FGameplayTag Montage_Attack_RightHand; 
+	
 
 protected:
 

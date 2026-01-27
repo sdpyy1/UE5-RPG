@@ -8,10 +8,6 @@
 class UGameplayEffect;
 
 /*
-	此文件用于定义各个职业需要的默认信息，如默认施加的GameEffect
-*/
-
-/*
 	职业枚举
 */
 UENUM(BlueprintType)
@@ -33,7 +29,7 @@ struct FCharacterClassDefaultInfo {
 };
 
 /**
- *
+ *	存储各个职业通用的信息和各自的不同信息，会被存储在GameMode类中，方便查询
  */
 UCLASS()
 class AURA_API UCharacterClassInfo : public UDataAsset
@@ -45,9 +41,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Character Class Default")
 	TMap<ECharacterClass, FCharacterClassDefaultInfo> CharacterClassInformation;
 
-	/*
-		职业通用Info
-	*/
+	/* 职业通用Info */
 	UPROPERTY(EditDefaultsOnly, Category = "Common Class Default")
 	TSubclassOf<UGameplayEffect> SecondaryAttributes;
 

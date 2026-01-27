@@ -14,7 +14,7 @@ class UBehaviorTree;
 class AAuraAIController;
 class AActor;
 /**
- *
+ *	敌人基类
  */
 UCLASS()
 class AURA_API AAuraEnemy : public AAuraCharacterBase, public IEnemyInterface
@@ -23,57 +23,54 @@ class AURA_API AAuraEnemy : public AAuraCharacterBase, public IEnemyInterface
 public:
 	AAuraEnemy();
 	virtual void PossessedBy(AController* NewController) override;
-	virtual void Die() override;
-
+	
+protected:
+	virtual void BeginPlay() override;
+	
+public:
+	/*  Enemy Interface */
 	virtual void SetCombatTarget_Implementation(AActor* InCombatTarget) override;
 	virtual AActor* GetCombatTarget_Implementation() override;
-
-	/*
-		HigtLight Interface
-	*/
 	virtual void HighlightActor() override;
 	virtual void UnHighlightActor() override;
+	/*  Enemy Interface End */
 
-	/*
-		Combat Interface
-	*/
+	/*  Combat Interface */
 	virtual int GetPlayerLevel() override;
-	void HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
+	virtual void Die() override;
+	/*  Combat Interface End*/
 
+public:
+	/* 受击后调用 */
+	void HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
 	UPROPERTY(BlueprintReadOnly, Category = "Combat")
 	bool bHitReacting = false;
 	UPROPERTY(BlueprintReadOnly, Category = "Combat")
 	float BaseWalkSpeed = 250;
 	UPROPERTY(BlueprintReadOnly, Category = "Combat")
-	float lifeSpen = 5;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+	float WalkSpeedAfterHitReact = 100;
+	UPROPERTY(BlueprintReadOnly, Category = "Combat")
+	float LifeSpan = 5;
+	UPROPERTY(BlueprintReadOnly, Category = "Combat")
 	TObjectPtr<AActor> CombatTarget;
-
-protected:
-	virtual void BeginPlay() override;
-	virtual void InitializeDefaultAttributes() const override;
-
-protected:
-	virtual void InitAbilityActorInfo() override;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UWidgetComponent> HealthBar;
-
 	UPROPERTY(BlueprintAssignable)
 	FOnAttributeChangedSignature OnHealthChangedDelegate;
 	UPROPERTY(BlueprintAssignable)
 	FOnAttributeChangedSignature OnMaxHealthChangedDelegate;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character Class Default", meta = (AllowPrivateAccess = true))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess = true))
 	int32 Level = 1;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character Class Default", meta = (AllowPrivateAccess = true))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess = true))
 	ECharacterClass CharacterClass = ECharacterClass::Warrior;
-
-	UPROPERTY(EditAnywhere, Category = "AI")
+	UPROPERTY(EditAnywhere, Category = "Combat|AI")
 	TObjectPtr<UBehaviorTree> BehaviorTree;
-
 	UPROPERTY()
 	TObjectPtr<AAuraAIController> AuraAIController;
+	
+protected:
+	virtual void InitAbilityActorInfo() override;
+	/* 因为敌人有不同的角色，所以初始化属性时需要特殊的处理 */
+	virtual void InitializeDefaultAttributes() const override;
+
 };

@@ -5,13 +5,14 @@
 #include "CoreMinimal.h"
 #include "DamageGameplayAbility.h"
 #include "AbilitySystem/Ability/AuraGameplayAbility.h"
-#include "AuraProjectileSpellAbility.generated.h"
+#include "AuraRangeAttackAbility.generated.h"
 class AAuraProjectileActor;
 /**
- *	投掷物的能力基类
+ *	远程攻击能力
  */
+class AActor;
 UCLASS()
-class AURA_API UAuraProjectileSpellAbility : public UDamageGameplayAbility
+class AURA_API UAuraRangeAttackAbility : public UDamageGameplayAbility
 {
 	GENERATED_BODY()
 protected:
@@ -20,7 +21,7 @@ protected:
 		在指定位置生成投掷物
 	*/
 	UFUNCTION(BlueprintCallable, Category = "Projectile")
-	void SpawnProjectile(const FVector& TargetLocation);
+	void SpawnProjectile(AActor* Attacker, const FVector& TargetLocation);
 
 
 	/*

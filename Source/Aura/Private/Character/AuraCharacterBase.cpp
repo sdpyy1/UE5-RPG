@@ -3,7 +3,10 @@
 #include "Character/AuraCharacterBase.h"
 #include "Components/CapsuleComponent.h"
 #include <AbilitySystem/AuraAbilitySystemComponent.h>
+
+#include "AuraGameplayTags.h"
 #include "Aura/Aura.h"
+#include "Engine/SkeletalMeshSocket.h"
 
 AAuraCharacterBase::AAuraCharacterBase()
 {
@@ -12,9 +15,9 @@ AAuraCharacterBase::AAuraCharacterBase()
 	Weapon = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Weapon"));
 	Weapon->SetupAttachment(GetMesh(), FName("WeaponHandSocket"));
 	Weapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-
+	
 	GetMesh()->SetCollisionResponseToChannel(ECC_Projectile, ECR_Overlap);
-	GetMesh()->SetGenerateOverlapEvents(true);  // ��������ܴ���OnOverlapBegin
+	GetMesh()->SetGenerateOverlapEvents(true);
 	GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 }
@@ -28,21 +31,28 @@ UAnimMontage* AAuraCharacterBase::GetHitReactMontage_Implementation()
 {
 	return HitReactMontage;
 }
-UAnimMontage* AAuraCharacterBase::GetAttackMontage_Implementation()
-{
-	return AttackMontage;
-}
 
 void AAuraCharacterBase::Die()
 {
-	Weapon->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld, true));
 	MulticastHandleDeath();
 }
 
-FVector AAuraCharacterBase::GetCombatSocketLocation_Implementation()
+FVector AAuraCharacterBase::GetCombatSocketLocation_Implementation(const FGameplayTag& MontageTag)
 {
-	check(Weapon);
-	return Weapon->GetSocketLocation(WeaponTipSocketName);
+	const FAuraGameplayTags NativeTags = FAuraGameplayTags::Get();
+	if (MontageTag == NativeTags.Montage_Attack_Weapon && IsValid(Weapon))
+	{
+		return Weapon->GetSocketLocation(WeaponTipSocketName);
+	}
+	else if (MontageTag == NativeTags.Montage_Attack_LeftHand)
+	{
+		return Weapon->GetSocketLocation(LeftHandSocketName);
+	}
+	else if (MontageTag == NativeTags.Montage_Attack_RightHand)
+	{
+		return Weapon->GetSocketLocation(RightHandSocketName);
+	}
+	return FVector();
 }
 
 bool AAuraCharacterBase::isDead_Implementation() const
@@ -57,6 +67,7 @@ AActor* AAuraCharacterBase::GetAvatar_Implementation()
 
 void AAuraCharacterBase::MulticastHandleDeath_Implementation()
 {
+	Weapon->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld, true));
 	Weapon->SetSimulatePhysics(true);
 	Weapon->SetEnableGravity(true);
 	Weapon->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
@@ -99,12 +110,8 @@ void AAuraCharacterBase::InitializeDefaultAttributes() const
 void AAuraCharacterBase::AddCharacterAbilities()
 {
 	UAuraAbilitySystemComponent* ASC = CastChecked<UAuraAbilitySystemComponent>(AbilitySystemComponent);
-
-	// �������˷���True
 	if (!HasAuthority()) return;
-
-	// �����ɫ����
-	ASC->AddCharacterAbilities(StarupAbilities);
+	ASC->AddCharacterAbilities(StartupAbilities);
 }
 
 void AAuraCharacterBase::Dissolve()
@@ -120,6 +127,11 @@ void AAuraCharacterBase::Dissolve()
 		Weapon->SetMaterial(0, WeaponDynamicMatInst);
 		StartWeaponDissolveTimeline(WeaponDynamicMatInst);
 	}
+}
+
+TArray<FTaggedMontage> AAuraCharacterBase::GetAttackMontages_Implementation()
+{
+	return AttackMontages;
 }
 
 void AAuraCharacterBase::InitAbilityActorInfo() {

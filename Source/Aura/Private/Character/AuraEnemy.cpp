@@ -16,13 +16,15 @@ AAuraEnemy::AAuraEnemy()
 {
 	//Cursor Trace In Visibility Channel For Enemy HighLight In PlayerController
 	GetMesh()->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
-	/////////////////////////////  GAS /////////////////////////////
+
+	/* 敌人的ASC组件挂载在自己上 */
 	AbilitySystemComponent = CreateDefaultSubobject<UAuraAbilitySystemComponent>("AbilitySystemComponent");
 	AbilitySystemComponent->SetIsReplicated(true);
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
-
 	AttributeSet = CreateDefaultSubobject<UAuraAttributeSet>("AttributeSet");
-	/* ��ת�������Ȼ��Ĭ�ϵ�Controllerת�����Ӳ��Movement���ʵ���˸��õ�ת��*/
+
+	
+	// 用movementComponent来更好的处理转向
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
@@ -30,7 +32,6 @@ AAuraEnemy::AAuraEnemy()
 
 	HealthBar = CreateDefaultSubobject<UWidgetComponent>("HealthBar");
 	HealthBar->SetupAttachment(GetRootComponent());
-	int num = StarupAbilities.Num();
 }
 
 void AAuraEnemy::PossessedBy(AController* NewController)
@@ -48,7 +49,7 @@ void AAuraEnemy::PossessedBy(AController* NewController)
 
 void AAuraEnemy::Die()
 {
-	SetLifeSpan(lifeSpen);
+	SetLifeSpan(LifeSpan);
 	Super::Die();
 }
 
@@ -87,7 +88,6 @@ void AAuraEnemy::BeginPlay()
 	GetCharacterMovement()->MaxWalkSpeed = BaseWalkSpeed;
 	InitAbilityActorInfo();
 
-	// ������ͼ���ܻ��Controller�ˣ��������Character������
 	if (UAuraUserWidget* AuraUserWidget = Cast<UAuraUserWidget>(HealthBar->GetUserWidgetObject())) {
 		AuraUserWidget->SetWidgetController(this);
 	}
@@ -113,20 +113,20 @@ void AAuraEnemy::BeginPlay()
 void AAuraEnemy::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
 {
 	bHitReacting = NewCount > 0;
-	GetCharacterMovement()->MaxWalkSpeed = bHitReacting ? 0.f : BaseWalkSpeed;
-	AuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("bHitReacting"), bHitReacting);
-}
-void AAuraEnemy::InitializeDefaultAttributes() const
-{
-	UAuraAbilitySystemLibrary::InitDefaultAttributes(this, CharacterClass, Level, AbilitySystemComponent);
+	GetCharacterMovement()->MaxWalkSpeed = bHitReacting ? WalkSpeedAfterHitReact: BaseWalkSpeed;
+	if (AuraAIController && AuraAIController->GetBlackboardComponent())  // Client is null
+	{
+		AuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("bHitReacting"), bHitReacting);
+	}
 }
 
 void AAuraEnemy::InitAbilityActorInfo()
 {
-	// 1. �����ӵ������˭ 2. ����������˭��������˭���似�ܣ�
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
-
 	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->AbilityCharacterInfoSet();
-
 	InitializeDefaultAttributes();
+}
+void AAuraEnemy::InitializeDefaultAttributes() const
+{
+	UAuraAbilitySystemLibrary::InitDefaultAttributes(this, CharacterClass, Level, AbilitySystemComponent);
 }

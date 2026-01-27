@@ -1,13 +1,14 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "AbilitySystem/Ability/AuraProjectileSpellAbility.h"
+#include "AbilitySystem/Ability/AuraRangeAttackAbility.h"
 #include <Interaction/CombatInterface.h>
 #include <Actor/AuraProjectileActor.h>
 #include <AbilitySystemBlueprintLibrary.h>
 #include "AbilitySystemComponent.h"
 #include "AuraGameplayTags.h"
+#include "Components/SphereComponent.h"
 
-void UAuraProjectileSpellAbility::SpawnProjectile(const FVector& TargetLocation)
+void UAuraRangeAttackAbility::SpawnProjectile(AActor* Attacker, const FVector& TargetLocation)
 {
 	const bool isSever = GetAvatarActorFromActorInfo()->HasAuthority();
 	if (!isSever) return;
@@ -15,7 +16,7 @@ void UAuraProjectileSpellAbility::SpawnProjectile(const FVector& TargetLocation)
 	ICombatInterface* CombatAPI = Cast<ICombatInterface>(GetAvatarActorFromActorInfo());
 	if (CombatAPI) {
 		// 生成这个投掷物Actor
-		const FVector SocketLocation = CombatAPI->Execute_GetCombatSocketLocation(GetAvatarActorFromActorInfo());
+		const FVector SocketLocation = CombatAPI->Execute_GetCombatSocketLocation(GetAvatarActorFromActorInfo(),FAuraGameplayTags::Get().Montage_Attack_Weapon);
 		FRotator SocketRotation = (TargetLocation - SocketLocation).Rotation();
 		SocketRotation.Pitch = 0.f;
 		FTransform SpawnTransform;
@@ -30,5 +31,8 @@ void UAuraProjectileSpellAbility::SpawnProjectile(const FVector& TargetLocation)
 		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, Tags.Damage, DamageEval);
 		SpawnActor->DamageEffectSpecHandle = SpecHandle;
 		SpawnActor->FinishSpawning(SpawnTransform);
+
+		SpawnActor->Sphere->IgnoreActorWhenMoving(Attacker, true); // 忽略自己
+
 	}
 }

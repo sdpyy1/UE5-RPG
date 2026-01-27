@@ -79,13 +79,32 @@ void UAuraAbilitySystemLibrary::GetLivePlayerWithinRadius(const UObject* WorldCo
 	{
 		if (Overlap.GetActor())
 		{
-			const bool Implements_Combat = Overlap.GetActor()->Implements<UCombatInterface>();
-			const bool isAlive = !ICombatInterface::Execute_isDead(Overlap.GetActor());
-			if (Implements_Combat && isAlive)
+			if (const bool Implements_Combat = Overlap.GetActor()->Implements<UCombatInterface>())
 			{
-				OutOverlappingActors.AddUnique(Overlap.GetActor());
+
+				if (Implements_Combat)
+				{
+					const bool isAlive = !ICombatInterface::Execute_isDead(Overlap.GetActor());
+					if (isAlive)
+					{
+						OutOverlappingActors.AddUnique(Overlap.GetActor());
+					}
+				}
+				
 			}
+			
+
 			
 		}
 	}
+}
+
+FTaggedMontage UAuraAbilitySystemLibrary::GetRandomTaggedMontage(TArray<FTaggedMontage> AttackMontages)
+{
+	if (int num = AttackMontages.Num(); num > 0)
+	{
+		const int32 Index = FMath::RandRange(0, num - 1);
+		return AttackMontages[Index];
+	}
+	return {};
 }

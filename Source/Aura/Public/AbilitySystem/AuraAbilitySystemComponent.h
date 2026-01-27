@@ -8,7 +8,7 @@
 struct FGameplayTagContainer;
 DECLARE_MULTICAST_DELEGATE_OneParam(FEffectAssetTags, const FGameplayTagContainer&)
 /**
- *
+ *	AbilitySystemComponent
  */
 UCLASS()
 class AURA_API UAuraAbilitySystemComponent : public UAbilitySystemComponent
@@ -22,10 +22,14 @@ public:
 
 	FEffectAssetTags EffectAssetTagsDelegate;
 
+	/*
+		给ASC添加一组Ability
+	 */
 	void AddCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>>& Abilities);
 
 	/*
 		ASC负责查看这个Tag对应的Ability，并操作这个Ability
+		用于需要按下案件才会激活的能力
 	*/
 	void AbilityInputTagHeld(const FGameplayTag& Tag);
 	void AbilityInputTagRelease(const FGameplayTag& Tag);

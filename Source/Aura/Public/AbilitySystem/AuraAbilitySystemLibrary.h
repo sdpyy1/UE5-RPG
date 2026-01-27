@@ -7,6 +7,7 @@
 #include "Data/CharacterClassInfo.h"
 
 #include "AuraAbilitySystemLibrary.generated.h"
+struct FTaggedMontage;
 class UAuraOverlayWidgetController;
 class UAuraAttributeMenuController;
 class UAbilitySystemComponent;
@@ -25,13 +26,16 @@ public:
 	UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibary|WidgetController")
 	static UAuraAttributeMenuController* GetAttributeMenuController(const UObject* UWorldContextObject);
 
+	/* 区分不同的Character来设置初始化属性*/
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibary|CharacterClassDefaults")
 	static void InitDefaultAttributes(const UObject* UWorldContextObject, ECharacterClass CharacterClass, float Level, UAbilitySystemComponent* ASC);
 
-	/*
-	 *	查询一个球形范围内的活的角色
-	 */
-	
+	/* 查询一个球形范围内的活的角色 */
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibary|GameplayMechanics")
 	static void GetLivePlayerWithinRadius(const UObject* WorldContextObject, TArray<AActor*>& OutOverlappingActors, const TArray<AActor*>& ActorsToIgnore, const FVector& SphereLocation, float Radius);
+
+	/* 在一个TaggedMontageArray中选择一个Montage*/
+	UFUNCTION(BlueprintCallable, Category = "Utils")
+	static FTaggedMontage GetRandomTaggedMontage(TArray<FTaggedMontage> AttackMontages);
+
 };

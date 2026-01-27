@@ -14,7 +14,7 @@
  	GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
 
 /**
- *
+ *	AttributeSet 用于管理赋予ASC组件的Character携带的属性，如生命值、魔力值、护甲
  */
 UCLASS()
 class AURA_API UAuraAttributeSet : public UAttributeSet

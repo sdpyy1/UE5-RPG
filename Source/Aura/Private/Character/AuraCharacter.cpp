@@ -13,7 +13,11 @@ AAuraCharacter::AAuraCharacter()
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 400.f, 0.f);
 	GetCharacterMovement()->bConstrainToPlane = true;
 	GetCharacterMovement()->bSnapToPlaneAtStart = true;
-
+	// 用movementComponent来更好的处理转向
+	bUseControllerRotationPitch = false;
+	bUseControllerRotationYaw = false;
+	bUseControllerRotationRoll = false;
+	GetCharacterMovement()->bUseControllerDesiredRotation = true;
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
@@ -57,6 +61,7 @@ void AAuraCharacter::InitAbilityActorInfo()
 		return;
 	}
 	check(playerState);
+	// ASC的owner是playerState，但是avatar是character
 	playerState->GetAbilitySystemComponent()->InitAbilityActorInfo(playerState, this);
 	Cast<UAuraAbilitySystemComponent>(playerState->GetAbilitySystemComponent())->AbilityCharacterInfoSet();
 
