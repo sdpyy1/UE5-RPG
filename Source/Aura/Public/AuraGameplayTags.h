@@ -42,6 +42,7 @@ public:
 	FGameplayTag Damage;
 	FGameplayTag Effects_HitReact;
 
+	/* 用于AI模块根据这个Tag来激活AttackAbility */
 	FGameplayTag Ability_Attack;
 
 	/* 用于区分Montage攻击时使用的时武器还是空手*/

@@ -31,6 +31,7 @@ AAuraProjectileActor::AAuraProjectileActor()
 
 void AAuraProjectileActor::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	// TODO: 根据DamageEffectSpecHandle获取攻击者，如果overlap的Actor是友军，直接返回
 	if (IsValid(ImpactSound))
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);

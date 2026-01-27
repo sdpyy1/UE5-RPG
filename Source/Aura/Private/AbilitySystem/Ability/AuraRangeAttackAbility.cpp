@@ -30,9 +30,29 @@ void UAuraRangeAttackAbility::SpawnProjectile(AActor* Attacker, const FVector& T
 		const float DamageEval = DamageComputer.GetValueAtLevel(GetAbilityLevel());
 		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, Tags.Damage, DamageEval);
 		SpawnActor->DamageEffectSpecHandle = SpecHandle;
+
+
+		// 设置忽略攻击者的碰撞，不然和自己碰上了
+		if (Attacker)
+		{
+			UPrimitiveComponent* ProjectileCollision = Cast<UPrimitiveComponent>(SpawnActor->GetRootComponent());
+			if (ProjectileCollision && IsValid(ProjectileCollision))
+			{
+				TArray<UPrimitiveComponent*> AttackerComponents;
+				Attacker->GetComponents<UPrimitiveComponent>(AttackerComponents);
+                
+				for (UPrimitiveComponent* Comp : AttackerComponents)
+				{
+					if (IsValid(Comp) && Comp->GetCollisionEnabled() != ECollisionEnabled::NoCollision)
+					{
+						ProjectileCollision->IgnoreComponentWhenMoving(Comp, true);
+						Comp->IgnoreComponentWhenMoving(ProjectileCollision, true);
+					}
+				}
+			}
+		}
 		SpawnActor->FinishSpawning(SpawnTransform);
 
-		SpawnActor->Sphere->IgnoreActorWhenMoving(Attacker, true); // 忽略自己
 
 	}
 }
