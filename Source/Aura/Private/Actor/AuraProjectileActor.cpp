@@ -10,6 +10,8 @@
 #include "Aura/Aura.h"
 #include <AbilitySystemBlueprintLibrary.h>
 
+#include "AbilitySystem/AuraAbilitySystemLibrary.h"
+
 AAuraProjectileActor::AAuraProjectileActor()
 {
 	PrimaryActorTick.bCanEverTick = false;
@@ -31,7 +33,8 @@ AAuraProjectileActor::AAuraProjectileActor()
 
 void AAuraProjectileActor::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	// TODO: 根据DamageEffectSpecHandle获取攻击者，如果overlap的Actor是友军，直接返回
+	AActor* causer = DamageEffectSpecHandle.Data.Get()->GetContext().GetEffectCauser();
+	if (!UAuraAbilitySystemLibrary::isEnemy(causer, OtherActor)) return;
 	if (IsValid(ImpactSound))
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);

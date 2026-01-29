@@ -38,4 +38,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Utils")
 	static FTaggedMontage GetRandomTaggedMontage(TArray<FTaggedMontage> AttackMontages);
 
+	
+	/* 判断Second是不是敌人 */
+	UFUNCTION(BlueprintCallable, Category = "Utils")
+	static bool isEnemy(AActor * First, AActor * Second);
 };

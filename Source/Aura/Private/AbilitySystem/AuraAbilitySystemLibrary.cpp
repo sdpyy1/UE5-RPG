@@ -108,3 +108,8 @@ FTaggedMontage UAuraAbilitySystemLibrary::GetRandomTaggedMontage(TArray<FTaggedM
 	}
 	return {};
 }
+
+bool UAuraAbilitySystemLibrary::isEnemy(AActor* First, AActor* Second)
+{
+	return First->ActorHasTag("Enemy")? Second->ActorHasTag("Player") : Second->ActorHasTag("Enemy");
+}
