@@ -9,6 +9,7 @@
 
 #include "AuraCharacterBase.generated.h"
 
+class UNiagaraSystem;
 class UAbilitySystemComponent;
 class UAttributeSet;
 class UGameplayEffect;
@@ -38,6 +39,7 @@ public:
 	virtual bool isDead_Implementation() const override;
 	virtual AActor * GetAvatar_Implementation() override;
 	virtual TArray<FTaggedMontage> GetAttackMontages_Implementation() override;
+	virtual UNiagaraSystem * GetBloodEffect_Implementation() override;
 	/*ICombatInterface End*/
 
 protected:
@@ -54,11 +56,11 @@ protected:
 	/* 添加角色的默认能力 */
 	void AddCharacterAbilities();
 	/* 每个角色都可以指定默认需要施加的游戏效果，用于初始化角色的属性 */
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "GAS|Attribute")
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Combat|GAS|Attribute")
 	TSubclassOf<UGameplayEffect> DefaultPrimaryAttributes;
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "GAS|Attribute")
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Combat|GAS|Attribute")
 	TSubclassOf<UGameplayEffect> DefaultSecondaryAttributes;
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "GAS|Attribute")
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Combat|GAS|Attribute")
 	TSubclassOf<UGameplayEffect> DefaultVitalAttributes;
 	/* 用上边设置的GameEffect初始化角色的属性 */
 	virtual void InitializeDefaultAttributes() const;
@@ -86,9 +88,9 @@ protected:
 	void StartDissolveTimeline(UMaterialInstanceDynamic* DynamicMaterialInstance);
 	UFUNCTION(BlueprintImplementableEvent)
 	void StartWeaponDissolveTimeline(UMaterialInstanceDynamic* DynamicMaterialInstance);
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Material")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat|Material")
 	TObjectPtr<UMaterialInstance> DissolveMaterialInstance;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Material")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat|Material")
 	TObjectPtr<UMaterialInstance> WeaponDissolveMaterialInstance;
 
 	/* 受击时播放的蒙太奇 */
@@ -97,6 +99,10 @@ protected:
 	/* 攻击时播放的蒙太奇(随机挑选一个) */
 	UPROPERTY(EditAnywhere,Category = "Combat")
 	TArray<FTaggedMontage> AttackMontages;
+
+	/* 被近战攻击命中后的特效 */
+	UPROPERTY(EditAnywhere,blueprintReadOnly, Category = "Combat")
+	UNiagaraSystem * BloodEffect;
 
 private:
 	UFUNCTION(netmulticast, Reliable)

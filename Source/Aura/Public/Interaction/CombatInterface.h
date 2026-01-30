@@ -7,6 +7,8 @@
 #include "UObject/Interface.h"
 #include "CombatInterface.generated.h"
 
+class UNiagaraSystem;
+
 USTRUCT(Blueprintable)
 struct FTaggedMontage
 {
@@ -14,9 +16,13 @@ struct FTaggedMontage
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	UAnimMontage* Montage = nullptr;
 
-	/* Tag用于指定接收在Montage中发送Notify携带的Tag */
+	/* Tag用于指定接收在Montage中发送Notify携带的Tag， 在动画蒙太奇中还是得手动设置每个Notify是哪个标签*/
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
-	FGameplayTag MontageTag;   
+	FGameplayTag MontageTag;
+
+	/* 命中音效 */
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	USoundBase * HitSound = nullptr;
 };
 
 
@@ -50,6 +56,11 @@ public:
 		
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	TArray<FTaggedMontage> GetAttackMontages();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	UNiagaraSystem * GetBloodEffect();
+
+
 	
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	bool isDead() const;
