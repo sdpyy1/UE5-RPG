@@ -44,5 +44,5 @@ public:
 	virtual int32 GetPlayerLevel() override;
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 protected:
-	virtual void InitAbilityActorInfo() override;
+	virtual void InitGas() override;
 };

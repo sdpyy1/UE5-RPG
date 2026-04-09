@@ -36,7 +36,7 @@ class UCombatInterface : public UInterface
 };
 class UAnimMontage;
 /**
- *
+ *	一些战斗相关的接口定义，会被所有AuraCharacter继承
  */
 class AURA_API ICombatInterface
 {

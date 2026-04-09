@@ -27,11 +27,9 @@ class AURA_API AAuraCharacterBase : public ACharacter, public IAbilitySystemInte
 
 public:
 	AAuraCharacterBase();
-protected:
-	virtual void BeginPlay() override;
-
+	
+/*ICombatInterface*/
 public:
-	/*ICombatInterface*/
 	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
 	virtual FVector GetCombatSocketLocation_Implementation(const FGameplayTag& MontageTag) override;
 
@@ -40,21 +38,22 @@ public:
 	virtual AActor * GetAvatar_Implementation() override;
 	virtual TArray<FTaggedMontage> GetAttackMontages_Implementation() override;
 	virtual UNiagaraSystem * GetBloodEffect_Implementation() override;
-	/*ICombatInterface End*/
-
+/*ICombatInterface End*/
+	
+	
+	
+	
+/* GAS */
+public:
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 protected:
 	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 	UPROPERTY()
 	TObjectPtr<UAttributeSet> AttributeSet;
-	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
-	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
-	/*定义初始化ASC的方式，敌人是挂在Character，Aura是挂在PlayerState，所以需要子类自己去重写*/
-	virtual void InitAbilityActorInfo();
-	/* 给Character施加一个GameplayEffect */
-	void ApplyEffectOnSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level) const;
-	/* 添加角色的默认能力 */
-	void AddCharacterAbilities();
+	/* 一开始就需要赋予给角色的能力 */
+	UPROPERTY(EditAnywhere, Category = "GAS|Abilities")
+	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
 	/* 每个角色都可以指定默认需要施加的游戏效果，用于初始化角色的属性 */
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Combat|GAS|Attribute")
 	TSubclassOf<UGameplayEffect> DefaultPrimaryAttributes;
@@ -62,18 +61,28 @@ protected:
 	TSubclassOf<UGameplayEffect> DefaultSecondaryAttributes;
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Combat|GAS|Attribute")
 	TSubclassOf<UGameplayEffect> DefaultVitalAttributes;
-	/* 用上边设置的GameEffect初始化角色的属性 */
+	
+	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
+	/*定义初始化Gas系统的接口，敌人是挂在Character，Aura是挂在PlayerState，所以需要子类自己去重写*/
+	virtual void InitGas();
+
+	/* 用Character携带的默认GameEffect初始化角色的属性 */
 	virtual void InitializeDefaultAttributes() const;
-	/* 一开始就需要赋予给角色的能力 */
-	UPROPERTY(EditAnywhere, Category = "GAS|Abilities")
-	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
+	
+	/* 添加角色的默认能力 */
+	void AddDefaultCharacterAbilities();
+	/* 给Character施加一个GameplayEffect */
+	void ApplyEffectOnSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level) const;
+
+/* GAS End*/
+
 
 protected:
 	bool bDead = false;
 	
+	/*武器相关*/
 	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category = "Combat")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
-
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	FName WeaponTipSocketName;
 	UPROPERTY(EditAnywhere, Category = "Combat")

@@ -17,6 +17,6 @@ class AURA_API AAuraGameModeBase : public AGameModeBase
 public:
 
 	/* 不同的角色需要的不同参数，挂载在这里，方便获取*/
-	UPROPERTY(EditDefaultsOnly, Category = "Character Class Defaults")
+	UPROPERTY(EditDefaultsOnly, Category = "Character|DataDriven")
 	TObjectPtr<UCharacterClassInfo> CharacterClassInfo;
 };

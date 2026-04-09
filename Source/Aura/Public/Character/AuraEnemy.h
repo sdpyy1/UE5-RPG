@@ -69,7 +69,7 @@ public:
 	TObjectPtr<AAuraAIController> AuraAIController;
 	
 protected:
-	virtual void InitAbilityActorInfo() override;
+	virtual void InitGas() override;
 	/* 因为敌人有不同的角色，所以初始化属性时需要特殊的处理 */
 	virtual void InitializeDefaultAttributes() const override;
 

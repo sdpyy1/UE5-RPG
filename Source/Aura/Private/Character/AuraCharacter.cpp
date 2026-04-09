@@ -30,14 +30,14 @@ void AAuraCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 
-	InitAbilityActorInfo();
-	AddCharacterAbilities();
+	InitGas();
+	AddDefaultCharacterAbilities();
 }
 
 void AAuraCharacter::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();
-	InitAbilityActorInfo();
+	InitGas();
 }
 
 int32 AAuraCharacter::GetPlayerLevel()
@@ -53,7 +53,7 @@ UAbilitySystemComponent* AAuraCharacter::GetAbilitySystemComponent() const
 	return playerState->GetAbilitySystemComponent();
 }
 
-void AAuraCharacter::InitAbilityActorInfo()
+void AAuraCharacter::InitGas()
 {
 	AAuraPlayerState* playerState = GetPlayerState<AAuraPlayerState>();
 

@@ -83,10 +83,6 @@ void AAuraCharacterBase::MulticastHandleDeath_Implementation()
 	bDead = true;
 }
 
-void AAuraCharacterBase::BeginPlay()
-{
-	Super::BeginPlay();
-}
 
 void AAuraCharacterBase::ApplyEffectOnSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level) const
 {
@@ -107,7 +103,7 @@ void AAuraCharacterBase::InitializeDefaultAttributes() const
 }
 
 
-void AAuraCharacterBase::AddCharacterAbilities()
+void AAuraCharacterBase::AddDefaultCharacterAbilities()
 {
 	UAuraAbilitySystemComponent* ASC = CastChecked<UAuraAbilitySystemComponent>(AbilitySystemComponent);
 	if (!HasAuthority()) return;
@@ -139,5 +135,5 @@ UNiagaraSystem* AAuraCharacterBase::GetBloodEffect_Implementation()
 	return BloodEffect;
 }
 
-void AAuraCharacterBase::InitAbilityActorInfo() {
+void AAuraCharacterBase::InitGas() {
 }
